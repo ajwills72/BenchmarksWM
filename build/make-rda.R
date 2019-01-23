@@ -3,10 +3,22 @@
 ## Licence: GPL 2.0+
 library(tidyverse)
 
+############### BM1.1 #####################
+
 ## Unsworth & Engle (2006a)
 
-## Summary: Converted to long format. Test and length separated as
-## variables. Non-benchmark data excluded.
+## Issues w/ original:
+## - Duplicate data sets (.xls and .txt).
+## - BM1.1.SetsizeAccuracy.R:
+##     - requires a directory "functions" which is absent
+##     - assumes case-insentive filenames 
+
+## Summary of changes:
+## - Converted to long format.
+## - Test and length separated as variables.
+## - Simple/complex variable added to easily reproduce results as reported.
+## - Variable levels given meaningful names.
+## - Non-benchmark tests excluded.
 
 rawd <- read_tsv("../BenchmarksWM.Data/BM1.1.SetsizeAccuracy/Unsworth.Engle.Listlength.txt")
 un <- gather(rawd, worupc2:wmset5, key="comb", value="acc")
@@ -16,5 +28,8 @@ un <- un %>% select(subject, test, size, acc)
 un$test <- recode(un$test, worupc = "word", letupc = "letter", opupc = "operation", rspupc = "reading")
 un <- un %>% filter(test != "wmset") %>% filter(test != "stmset")
 un <- un %>% arrange(subject, test, size)
+un$type <- recode(un$test, word = "simple", letter = "simple", operation = "complex", reading = "complex")
+un <- un %>% select(subject, type, test, size, acc)
 unsworth06a <- un
 save(unsworth06a, file = "../pkg/data/unsworth06a.rda")
+rm(un)

@@ -7,5 +7,7 @@ Author: Andy Wills
 Maintainer: Andy Wills  <andy@willslab.co.uk>
 Description: Individual-subject data from benchmark working memory experiments.
 License: GPL (>= 2)
+Imports:
+	tidyverse
 LazyData: true
 
