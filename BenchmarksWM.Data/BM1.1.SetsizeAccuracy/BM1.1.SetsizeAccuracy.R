@@ -18,7 +18,7 @@ bgcolors <- c("black", "grey", "white", "grey80", "grey20", "black", "white")
 
 
 # Load data for simple and complex span
-d = read_excel("Unsworth.Engle.ListLength.xlsx")  # data from Unsworth & Engle 2006
+d = read_excel("Unsworth.Engle.Listlength.xlsx")  # data from Unsworth & Engle 2006
 wordspan <- d[,which(grepl("wor", colnames(d)))]
 letterspan <- d[,which(grepl("let", colnames(d)))]
 opspan <- d[,which(grepl("op", colnames(d)))]
