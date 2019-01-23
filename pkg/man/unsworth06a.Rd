@@ -13,7 +13,7 @@
 \format{
   A data frame with 4935 observations on the following 4 variables.
   \describe{
-    \item{\code{subj}}{Unique ID number for each subject.}
+    \item{\code{subject}}{Unique ID number for each subject.}
     \item{\code{test}}{Test type: 'word', 'letter', 'operation', or 'reading'}
     \item{\code{size}}{Set size: 2-8.}
     \item{\code{acc}}{Proportion correct}
@@ -27,8 +27,8 @@
   archived in Oberauer (2019). The comprise the proportion correct
   scores for 235 U.S. adults aged 18-35. Each participant completed four
   serial recall working memory tests, using: (a) words, (b) letters, (c)
-  words presented within an math operations task ('operation'), (d)
-  letters presented within a sentence-reading task ('reading')
+  words presented within a math operations task ('operation'), (d)
+  letters presented within a sentence-reading task ('reading').
 
 }
 \source{
@@ -36,7 +36,7 @@
   Oberauer, K. (2019). BenchmarksWM. https://github.com/oberauer/BenchmarksWM
 
 }
-\references{ Kane, Unsowrth, Ob18
+\references{ 
 
   Kane, M.J., Hambrick, D.Z., Tuholski, S.W., Wilhelm, O., Payne, T.W.,
   and Engle, R.W. (2004). The generality of working memory capacity: A
