@@ -2,16 +2,16 @@
 ## Author: Andy J. Wills
 ## Licence: GPL 2.0+
 library(tidyverse)
-
+library(readxl)
 ############### BM1.1 #####################
 
-## Unsworth & Engle (2006a)
-
-## Issues w/ original:
+## Issues w/ original R script:
 ## - Duplicate data sets (.xls and .txt).
 ## - BM1.1.SetsizeAccuracy.R:
 ##     - requires a directory "functions" which is absent
 ##     - assumes case-insentive filenames 
+
+### Unsworth & Engle (2006a) ###
 
 ## Summary of changes:
 ## - Converted to long format.
@@ -33,3 +33,25 @@ un <- un %>% select(subject, type, test, size, acc)
 unsworth06a <- un
 save(unsworth06a, file = "../pkg/data/unsworth06a.rda")
 rm(un)
+
+### Bunting et al. (2006) ###
+
+## Summary of changes:
+## - Converted to long format
+## - Speed, span, and position, separated as variables
+## - Variables given meaningful names
+## - Handedness removed as all participants were right handed.
+
+rawd <- read_excel("../BenchmarksWM.Data/BM1.1.SetsizeAccuracy/Bunting.Cowan.Running.xls",
+                   sheet=3)
+bu <- gather(rawd, f7sp7_ac:s1sp1_ac, key="comb", value="acc")
+bu$speed <- substr(bu$comb, 1, 1)
+bu$span <- as.integer(substr(bu$comb, 2, 2))
+bu$pos <- as.integer(substr(bu$comb, 5, 5))
+bu <- bu %>% select(Subject, Gender, speed, span, pos, acc)
+colnames(bu) <- c("subject", "gender", "speed", "span", "pos", "acc")
+bu$speed <- recode(bu$speed, f = "fast", s = "slow")
+bu$subject <- as.integer(bu$subject)
+bunting06 <- bu
+save(bunting06, file = "../pkg/data/bunting06.rda")
+rm(bu)
