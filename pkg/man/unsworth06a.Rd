@@ -59,7 +59,7 @@
 }
 \examples{
 
-    ## Reproducing Figure 1A of Oberauer et al. (2018).
+    ## Reproducing Figure 2A of Oberauer et al. (2018).
     data(unsworth06a)
     library(tidyverse)
     unsplot <- unsworth06a \%>\% filter(size < 8) \%>\%

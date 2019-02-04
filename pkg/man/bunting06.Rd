@@ -53,7 +53,7 @@
 }
 \examples{
 
-    ## Reproducing Figure 1B of Oberauer et al. (2018).
+    ## Reproducing Figure 2B of Oberauer et al. (2018).
     data(bunting06)
     library(tidyverse)
     bunplot <- bunting06 \%>\% group_by(speed, span) \%>\%

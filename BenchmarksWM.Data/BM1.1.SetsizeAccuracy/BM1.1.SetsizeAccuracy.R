@@ -52,7 +52,7 @@ colnames1 <- c("id", "setsize", "trial", "pt0", "pt1", "ptcat", "crit",
               "corrval2", "resp2", "correct2", "rt2",
               "corrval3", "resp3", "correct3", "rt3",
               "corrval4", "resp4", "correct4", "rt4")
-mutaf1 <- read.table("Oberauer.Kliegl.MU1.dat", header=F, fill=T, col.names=colnames1) #with col.names given, read.table reads in as many columsn as there are names
+mutaf1 <- read.table("Oberauer.Kliegl.MU1.DAT", header=F, fill=T, col.names=colnames1) #with col.names given, read.table reads in as many columsn as there are names
 colnames2 <- c("id", "setsize", "trial", "pt0", "pt1", "ptcat", "crit", 
                "corrval1", "resp1", "correct1", "rt1",
                "corrval2", "resp2", "correct2", "rt2",
