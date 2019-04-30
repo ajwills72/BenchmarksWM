@@ -79,6 +79,23 @@ verhaeghen05  <- data.frame(back, acc)
 save(verhaeghen05, file = "../pkg/data/verhaeghen05.rda")
 
 ### Oberauer & Kliegel (2001)
+
+## Summary of changes relative to Oberauer 2019
+
+## Converted to long format
+
+## Excluded those data points not contributing to the benchmark
+## (trials < 6000ms; older adults; set size = 0)
+
+## Excluded variables not contributing to benchmark
+## (e.g. presentation time, response time, physical responses e.g. '5')
+
+## Summarised to trial-level accuracy,
+## (Oberauer data recorded and what the participant's response
+## was to each of the several cues in a single trial).
+
+Filter out older adults
+## Filter out 
 fnam  <- paste0(pth, "/Oberauer.Kliegl.MU1.DAT")
 
 ## Load Part 1
@@ -112,69 +129,29 @@ mutaf2 <- mutaf2 %>% filter(pt0 > 5999) %>% filter(id < 30)
 ## Select needed columns
 mutaf1 <- mutaf1 %>% select(id, exp, setsize, trial, correct1, correct2,
                             correct3, correct4)
+mutaf2 <- mutaf2 %>% select(id, exp, setsize, trial, correct1, correct2,
+                            correct3, correct4, correct5, correct6)
 
 ## Convert to long format and arrange order
 mutaf1l <- mutaf1 %>%
     gather(key = "subtrial", value = "correct", correct1:correct4) %>%
     arrange(id, setsize, trial, subtrial)
 
-mutaf2 <- mutaf2 %>% select(id, exp, setsize, trial, correct1, correct2,
-                            correct3, correct4, correct5, correct6)
+mutaf2l <- mutaf2 %>%
+    gather(key = "subtrial", value = "correct", correct1:correct6) %>%
+    arrange(id, setsize, trial, subtrial)
 
+## Combine studies
+mutafX  <- rbind(mutaf1l, mutaf2l)
 
-#############################
-## Column numbers for columns whose labels include 'correct'
-## i.e. those that contain accuracy scores
-pcidx1 <- which(grepl("correct", colnames(mutaf1)))
-pcidx2 <- which(grepl("correct", colnames(mutaf2)))
+## Remove NA
+mutafX  <- mutafX[!is.na(mutafX$correct),]
 
-## Identify column containing setsize
-ssidx <- which(colnames(mutaf1)=="setsize")
+## Standardize column names
+colnames(mutafX)  <- c("subject", "study", "size", "trial", "subtrial", "acc")
 
-
-
-## Custom function to compute percent correct
-computePC <- function(x) {
-  setsize <- as.numeric(x[1])
-  pcvector <- as.numeric(x[2:(setsize+1)])
-  return(mean(pcvector))}
-
-## Really inefficient way to work out %correct per trialk
-mutaf1$PC <- NULL
-for (j in 1:dim(mutaf1)[1]) {
-  mutaf1[j,"PC"] <- computePC(mutaf1[j,c(ssidx, pcidx1)])
-}
-
-mutaf2$PC <- NULL
-for (j in 1:dim(mutaf2)[1]) {
-  mutaf2[j,"PC"] <- computePC(mutaf2[j,c(ssidx, pcidx2)])
-}
-
-## Weird way to subset to needed columns
-mt1 <- mutaf1[, which(colnames(mutaf1) %in% c("id", "exp", "setsize", "pt0", "PC"))]
-mt2 <- mutaf2[, which(colnames(mutaf2) %in% c("id", "exp", "setsize", "pt0", "PC"))]
-
-## Combine
-mutaf <- rbind(mt1, mt2)
-
-## Select subj# < 30 (young adults)
-## ... and also for the maximal presentation time of 6 seconds.
-mt1.y.long <- subset(mt1, id < 30 & pt0 > 5999)
-mt2.y.long <- subset(mt2, id < 30 & pt0 > 5999)
-
-## Really inefficient way of getting accuracy by set size by subject
-nsubj <- length(unique(mt1.y.long$id))
-MUarray1 <- array(NA,dim=c(4,1,nsubj))
-for (ss in 1:4) {
-    d <- subset(mt1.y.long, setsize==ss)
-    aggdat <- aggregate(PC ~ id, data=d, FUN=mean)
-    MUarray1[ss,1,] <- aggdat$PC
-}
-
-nsubj <- length(unique(mt2.y.long$id))
-MUarray2 <- array(NA,dim=c(3,1,nsubj))
-for (ss in 4:6) {
-  d <- subset(mt2.y.long, setsize==ss)
-  aggdat <- aggregate(PC ~ id, data=d, FUN=mean)
-  MUarray2[ss-3,1,] <- aggdat$PC
-}
+## Reduce to trial-level data
+oberauer01  <- mutafX %>%
+    group_by(subject, study, size, trial) %>%
+    summarise(acc = mean(acc))
+    
