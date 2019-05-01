@@ -16,7 +16,7 @@
   \describe{
     \item{\code{age}}{Age group of participant: 'young' adults, 'older' adults}
     \item{\code{subject}}{Unique ID number for each subject}
-    \item{\code{study}}{Part of study: 1-2}
+    \item{\code{part}}{Part of study: 1-2}
     \item{\code{size}}{Set size: 1-4 in study part 1, 4-6 in study part
       2}
     \item{\code{ptime}}{Presentation time of each update instruction
@@ -70,7 +70,7 @@
 
   Oberauer, K., & Kliegl, R. (2001). Beyond resources: Formal models of
   complexity effects and age differences in working memory. \emph{The Euro-
-  pean Journal of Cognitive Psychology, 13}, 187–215.
+  pean Journal of Cognitive Psychology, 13}, 187-215.
   
 }
 \examples{

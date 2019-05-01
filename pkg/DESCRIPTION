@@ -1,8 +1,8 @@
 Package: BenchmarksWM
 Type: Package
 Title: Working Memory Benchmarks
-Version: 0.1
-Date: 2019-01-22
+Version: 0.1.1
+Date: 2019-05-01
 Author: Andy Wills
 Maintainer: Andy Wills  <andy@willslab.co.uk>
 Description: Individual-subject data from benchmark working memory experiments.
