@@ -80,22 +80,12 @@ save(verhaeghen05, file = "../pkg/data/verhaeghen05.rda")
 
 ### Oberauer & Kliegel (2001)
 
-## Summary of changes relative to Oberauer 2019
+## Summary of changes relative to Oberauer 2019:
 
 ## Converted to long format
+## Measure and item seperated as variables
+## Column added to indicate age group
 
-## Excluded those data points not contributing to the benchmark
-## (trials < 6000ms; older adults; set size = 0)
-
-## Excluded variables not contributing to benchmark
-## (e.g. presentation time, response time, physical responses e.g. '5')
-
-## Summarised to trial-level accuracy,
-## (Oberauer data recorded and what the participant's response
-## was to each of the several cues in a single trial).
-
-Filter out older adults
-## Filter out 
 fnam  <- paste0(pth, "/Oberauer.Kliegl.MU1.DAT")
 
 ## Load Part 1
@@ -123,35 +113,51 @@ mutaf1 <- mutaf1[mutaf1$setsize>0,]
 
 ## Filter to trials with maximum presentation duration (6s)
 ## and to young adults (id < 30)
-mutaf1 <- mutaf1 %>% filter(pt0 > 5999) %>% filter(id < 30)
-mutaf2 <- mutaf2 %>% filter(pt0 > 5999) %>% filter(id < 30)
+
+#mutaf2 <- mutaf2 %>% filter(pt0 > 5999) %>% filter(id < 30)
 
 ## Select needed columns
-mutaf1 <- mutaf1 %>% select(id, exp, setsize, trial, correct1, correct2,
-                            correct3, correct4)
-mutaf2 <- mutaf2 %>% select(id, exp, setsize, trial, correct1, correct2,
-                            correct3, correct4, correct5, correct6)
+mutaf1 <- mutaf1 %>%
+    select(id, exp, setsize, trial, pt0, corrval1:rt4)
+mutaf2 <- mutaf2 %>%
+    select(id, exp, setsize, trial, pt0, corrval1:rt6)
 
 ## Convert to long format and arrange order
 mutaf1l <- mutaf1 %>%
-    gather(key = "subtrial", value = "correct", correct1:correct4) %>%
-    arrange(id, setsize, trial, subtrial)
+    gather(key = "key", value = "val", corrval1:rt4) %>%
+    arrange(id, setsize, trial, key)
 
 mutaf2l <- mutaf2 %>%
-    gather(key = "subtrial", value = "correct", correct1:correct6) %>%
-    arrange(id, setsize, trial, subtrial)
+    gather(key = "key", value = "val", corrval1:rt6) %>%
+    arrange(id, setsize, trial, key)
 
 ## Combine studies
 mutafX  <- rbind(mutaf1l, mutaf2l)
 
 ## Remove NA
-mutafX  <- mutafX[!is.na(mutafX$correct),]
+mutafX  <- mutafX[!is.na(mutafX$val),]
+
+## Split 'key' into measure and item
+mutafX$item <- substr(mutafX$key,
+                       nchar(mutafX$key),
+                       nchar(mutafX$key))
+
+mutafX$measure <- substr(mutafX$key, 1,
+                         nchar(mutafX$key) - 1)
+
+## Add column for participant age
+mutafX$age <- "older"
+mutafX$age[mutafX$id < 30] <- "young"
+
+## Remove key and rearrange order of columns
+mutafX <- mutafX %>%
+    select(age, id, exp, setsize, pt0, trial, item, measure, val)
 
 ## Standardize column names
-colnames(mutafX)  <- c("subject", "study", "size", "trial", "subtrial", "acc")
+colnames(mutafX)  <- c("age", "subject", "part", "size", "ptime", "trial",
+                       "item", "measure", "val")
 
-## Reduce to trial-level data
-oberauer01  <- mutafX %>%
-    group_by(subject, study, size, trial) %>%
-    summarise(acc = mean(acc))
-    
+## Create final dataframe, with human-readble ordering of rows
+oberauer01 <- mutafX %>% arrange(subject, part, size, trial, item, measure)
+save(oberauer01, file = "../pkg/data/oberauer01.rda")
+
