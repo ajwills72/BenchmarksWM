@@ -161,3 +161,10 @@ colnames(mutafX)  <- c("age", "subject", "part", "size", "ptime", "trial",
 oberauer01 <- mutafX %>% arrange(subject, part, size, trial, item, measure)
 save(oberauer01, file = "../pkg/data/oberauer01.rda")
 
+### Change detection: Adam et al (2015)
+fnam  <- paste0(pth, "Adam.ChangeDet.dat")
+adam15 <- read.table(fnam, header=F)
+colnames(adam15) <- c("subject", "size", "change", "acc")
+save(adam15, file = "../pkg/data/adam15.rda")
+
+
