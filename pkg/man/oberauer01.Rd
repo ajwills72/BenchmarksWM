@@ -75,7 +75,7 @@
 }
 \examples{
 
-    ## Reproducing Figure 2D of Oberauer et al. (2018).
+    ## Reproducing Figure 2E of Oberauer et al. (2018).
     data(oberauer01)
     library(tidyverse)
     ## Filter and summarise data
